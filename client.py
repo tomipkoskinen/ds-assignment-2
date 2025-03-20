@@ -6,6 +6,7 @@ print(s.health())
 
 # Print list of available methods
 print(s.system.listMethods())
+print()
 
 def menu() -> int:
     print("1) Add note")
