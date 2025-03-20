@@ -47,7 +47,7 @@ with SimpleXMLRPCServer(('localhost', 8000), requestHandler=RequestHandler) as s
             tree.write("db.xml")
             return True
 
-        def get_notes(self, topic) -> list:
+        def get_notes(self, topic: str) -> list:
             tree = ET.parse("db.xml")
             root = tree.getroot()
 
@@ -63,6 +63,18 @@ with SimpleXMLRPCServer(('localhost', 8000), requestHandler=RequestHandler) as s
                         }
                         notes.append(note)
             return notes
+
+        def search_wikipedia(self, query: str) -> str | None:
+            url = "https://en.wikipedia.org/w/api.php"
+            params = {"action": "opensearch", "search": query, "limit": "1", "format": 'json'}
+            
+            response = requests.get(url, params=params)
+            data = response.json()
+            if len(data[3]) > 0:
+                url = data[3][0]
+                return url
+            return None
+
 
     server.register_instance(Notebook())
 

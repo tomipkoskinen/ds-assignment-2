@@ -10,6 +10,7 @@ print(s.system.listMethods())
 def menu() -> int:
     print("1) Add note")
     print("2) Get topic")
+    print("3) Append Wikipedia article to topic")
     print("0) Exit")
     user_input = input("Choose option: ")
     try:
@@ -38,15 +39,36 @@ def main():
                     continue
             else:
                 timestamp = datetime.datetime.now().strftime("%m/%d/%y - %H:%M:%S")
- 
             if s.add_note(topic, name, text, timestamp):
-                print("Note added")
+                print("note added")
             else:
-                print("Error adding note")
+                print("error adding note")
         elif menu_selection == 2:
             topic = input("Topic: ")
             notes = s.get_notes(topic)
-            print(notes)
+            if notes:
+                for note in notes:
+                    print()
+                    print(note["name"])
+                    print(note["text"])
+                    print(note["timestamp"])
+            else:
+                print("Topic is empty")
+        elif menu_selection == 3:
+            query = input("Search query: ")
+            result = s.search_wikipedia(query)
+            if result != None:
+                print(result)
+                topic = input("Topic to add to: ")
+                name = "Wikipedia " + query
+                text = result
+                timestamp = datetime.datetime.now().strftime("%m/%d/%y - %H:%M:%S")
+                if s.add_note(topic, name, text, timestamp):
+                    print("note added")
+                else:
+                    print("error adding note")
+            else:
+                print("No article found")
         elif menu_selection == 0:
             break
         else:
